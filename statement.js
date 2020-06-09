@@ -22,7 +22,7 @@ function amountFor(performance){
   return result
 }
 
-function playFor(performance){
+function playFor(performance, plays){
   return plays[performance.playID];
 }
 
@@ -62,19 +62,23 @@ function renderPlainText(data){
   return result;
 }
 
-function enrichPerformance(performance){
+function enrichPerformance(performance, plays){
   const result = Object.assign({}, performance);
-  result.play = playFor(result);
+  result.play = playFor(result, plays);
   result.amount = amountFor(result);
   result.volumeCredits = volumeCreditsFor(result)
   return result;
 }
 
-function statement(invoice){
+function createStatementData (invoice, plays) {
   const statementData = {}
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances.map(enrichPerformance);
+  statementData.performances = invoice.performances.map(p => enrichPerformance(p, plays));
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-  return renderPlainText(statementData, invoice)
+  return statementData;
+}
+
+function statement(invoice, plays){
+  return renderPlainText(createStatementData(invoice, plays))
 }
