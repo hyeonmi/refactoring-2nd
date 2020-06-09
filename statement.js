@@ -49,17 +49,23 @@ function totalVolumeCredits(invoice){
   return volumeCredits;
 }
 
-function statement(invoice){
+function totalAmount(invoice){
   let totalAmount = 0;
+  for(let perf of invoice.performances){
+    totalAmount += amountFor(perf)
+  }
+  return totalAmount;
+}
+
+function statement(invoice){
   let result = `청구 내역(고객명: ${invoice.customer})\n`;
 
   for(let perf of invoice.performances){
     // 청구 내역 출력
     result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석) \n`;
-    totalAmount += amountFor(perf)
   }
 
-    result += `총액: ${usd(totalAmount)}\n`;
+  result += `총액: ${usd(totalAmount(invoice))}\n`;
   result += `적립 포인트: ${totalVolumeCredits(invoice)}점\n`;
   return result;
 }
