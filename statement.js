@@ -57,10 +57,10 @@ function totalAmount(invoice){
   return result;
 }
 
-function renderPlainText(invoice){
-  let result = `청구 내역(고객명: ${invoice.customer})\n`;
+function renderPlainText(data, invoice){
+  let result = `청구 내역(고객명: ${data.customer})\n`;
 
-  for(let perf of invoice.performances){
+  for(let perf of data.performances){
     // 청구 내역 출력
     result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석) \n`;
   }
@@ -71,5 +71,12 @@ function renderPlainText(invoice){
 }
 
 function statement(invoice){
-  return renderPlainText(invoice)
+  const statementData = {}
+  statementData.customer = invoice.customer;
+  statementData.performances = invoice.performances.map(enrichPerformance);
+
+  function enrichPerformance(performance){
+    return Object.assign({}, performance);
+  }
+  return renderPlainText(statementData, invoice)
 }
