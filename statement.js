@@ -1,7 +1,7 @@
-function amountFor(performance, play){
+function amountFor(performance){
   let result = 0;
 
-  switch(play.type){
+  switch(playFor(performance).type){
     case "tragedy":
       result = 40000;
       if(performance.audience > 30){
@@ -17,29 +17,32 @@ function amountFor(performance, play){
       result += 300 * performance.audience;
       break;
     default:
-      throw new Error(`알 수 없는 장르 : ${play.type}`);
+      throw new Error(`알 수 없는 장르 : ${playFor(performance).type}`);
   }
   return result
 }
-function statement(invoice, plays){
+
+function playFor(performance){
+  return plays[performance.playID];
+}
+
+function statement(invoice){
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구 내역(고객명: ${invoice.customer})\n`;
   const format = new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2 }).format;
 
   for(let perf of invoice.performances){
-    const play = plays[perf.playID];
-    const thisAmount = amountFor(perf, play);
-
+    const thisAmount = amountFor(perf);
 
     // 포인트 적립
     volumeCredits += Math.max(perf.audience - 30, 0);
 
     // 희극 관객 5명마다 추가 포인트 제공
-    if("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
 
     // 청구 내역 출력
-    result += `${play.name}: ${format(thisAmount/100)} (${perf.audience}석) \n`;
+    result += `${playFor(perf).name}: ${format(thisAmount/100)} (${perf.audience}석) \n`;
     totalAmount += thisAmount
   }
 
