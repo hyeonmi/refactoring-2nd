@@ -28,6 +28,17 @@ class PerformanceCalculator {
     return result
   }
 
+  get volumeCredits(){
+    let result = 0;
+    result += Math.max(this.performance.audience - 30, 0);
+
+    if("comedy" === this.play.type) {
+      result += Math.floor(this.performance.audience / 5);
+    }
+
+    return result;
+  }
+
 }
 
 function enrichPerformance(performance, plays){
@@ -35,19 +46,12 @@ function enrichPerformance(performance, plays){
   const result = Object.assign({}, performance);
   result.play = calculator.play;
   result.amount = calculator.amount;
-  result.volumeCredits = volumeCreditsFor(result)
+  result.volumeCredits = volumeCreditsFor(result, plays)
   return result;
 }
 
-function volumeCreditsFor (performance) {
-  let result = 0;
-  result += Math.max(performance.audience - 30, 0);
-
-  if("comedy" === performance.play.type) {
-    result += Math.floor(performance.audience / 5);
-  }
-
-  return result;
+function volumeCreditsFor (performance, plays) {
+  return new PerformanceCalculator(performance, playFor(performance, plays)).volumeCredits;
 }
 
 function playFor(performance, plays){
