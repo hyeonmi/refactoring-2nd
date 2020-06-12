@@ -1,6 +1,3 @@
-function createPerformanceCalculator (performance, play) {
-  return new PerformanceCalculator(performance, play);
-}
 
 class PerformanceCalculator {
   constructor (performance, play) {
@@ -43,6 +40,19 @@ class PerformanceCalculator {
     return result;
   }
 
+}
+
+class TragedyCalculator extends PerformanceCalculator {}
+
+class ComedyCalculator  extends PerformanceCalculator {}
+
+function createPerformanceCalculator (performance, play) {
+  switch (play.type) {
+    case "tragedy": return new TragedyCalculator(performance, play);
+    case "comedy": return new ComedyCalculator(performance, play);
+    default:
+      throw new Error(`알 수 없는 장르 : ${play.type}`);
+  }
 }
 
 function enrichPerformance(performance, plays){
