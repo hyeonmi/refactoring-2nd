@@ -7,7 +7,7 @@ class PerformanceCalculator {
   get amount(){
     let result = 0;
 
-    switch(this.performance.play.type){
+    switch(this.play.type){
       case "tragedy":
         result = 40000;
         if(this.performance.audience > 30){
@@ -34,7 +34,7 @@ function enrichPerformance(performance, plays){
   const calculator = new PerformanceCalculator(performance, playFor(performance, plays))
   const result = Object.assign({}, performance);
   result.play = calculator.play;
-  result.amount = amountFor(result, plays);
+  result.amount = calculator.amount;
   result.volumeCredits = volumeCreditsFor(result)
   return result;
 }
@@ -48,10 +48,6 @@ function volumeCreditsFor (performance) {
   }
 
   return result;
-}
-
-function amountFor (performance, plays) {
-  return new PerformanceCalculator(performance, playFor(performance, plays)).amount
 }
 
 function playFor(performance, plays){
