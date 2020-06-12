@@ -1,3 +1,7 @@
+function createPerformanceCalculator (performance, play) {
+  return new PerformanceCalculator(performance, play);
+}
+
 class PerformanceCalculator {
   constructor (performance, play) {
     this.performance = performance;
@@ -42,7 +46,7 @@ class PerformanceCalculator {
 }
 
 function enrichPerformance(performance, plays){
-  const calculator = new PerformanceCalculator(performance, playFor(performance, plays))
+  const calculator = createPerformanceCalculator(performance, playFor(performance, plays))
   const result = Object.assign({}, performance);
   result.play = calculator.play;
   result.amount = calculator.amount;
